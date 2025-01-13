@@ -1,10 +1,13 @@
 import os
 import shutil
 import json
+import tqdm
+import tempfile
+import zipfile
 from dataclasses import dataclass
 
 # ================== CONFIG ================== #
-INPUT_DIR = 'submissions'
+INPUT_ZIP = 'submissions.zip'
 OUTPUT_DIR = 'solutions'
 # ============================================ #
 
@@ -98,6 +101,14 @@ def write_submission(submission_path : str):
     shutil.copy(input_path, output_path)
     correct_comment(output_path, info, extension)
 
-for submissions in get_accepted_submissions():
-    chosen = select_submission(submissions)
-    write_submission(chosen)
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
+
+with tempfile.TemporaryDirectory() as temp_dir:
+    with zipfile.ZipFile('submissions.zip', 'r') as zip_ref:
+        zip_ref.extractall(temp_dir)
+    INPUT_DIR = temp_dir # kinda hacky but works -- maybe fix later
+    submissions = list(get_accepted_submissions())
+    for submissions in tqdm.tqdm(submissions):
+        chosen = select_submission(submissions)
+        write_submission(chosen)
