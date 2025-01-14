@@ -2,6 +2,10 @@
 
 This repository contains my solutions to various LeetCode problems, primarily written in Python. You can use the provided script to easily create your own version of this repository within minutes.
 
+## Notable Solutions (WIP)
+- [0038_count-and-say](https://github.com/VirtualMe64/leetcode-solutions/blob/main/solutions/0038_count-and-say.py) - used caching and lists to beat 99%
+- [0856_consecutive-numbers-sum](https://github.com/VirtualMe64/leetcode-solutions/blob/main/solutions/0856_consecutive-numbers-sum.py) - beat ~95% using a math based approach
+
 ## How to Use
 
 1. **Download Submissions:**  
