@@ -39,6 +39,7 @@ class Submission:
     title_slug: str
     has_notes: bool
     flag_type: int
+    frontend_id: int
 
 # read the submissions dir and extract the accepted submissions
 # yields lists of paths to the accepted submissions
@@ -54,7 +55,6 @@ def get_accepted_submissions():
 def get_info(submission_path : str) -> Submission:
     with open(os.path.join(submission_path, 'info.txt')) as f:
         data = json.load(f)
-        print(data)
     return Submission(**data)
 
 # Take fastest python solution, or fastest solution if no python solution
