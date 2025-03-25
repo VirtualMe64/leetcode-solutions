@@ -54,6 +54,7 @@ def get_accepted_submissions():
 def get_info(submission_path : str) -> Submission:
     with open(os.path.join(submission_path, 'info.txt')) as f:
         data = json.load(f)
+        print(data)
     return Submission(**data)
 
 # Take fastest python solution, or fastest solution if no python solution
