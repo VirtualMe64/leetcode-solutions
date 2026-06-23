@@ -1,15 +1,11 @@
 import os
 import shutil
-import json
 import tqdm
 import tempfile
 import zipfile
-from dataclasses import dataclass
 
-# ================== CONFIG ================== #
-INPUT_ZIP = 'submissions.zip'
-OUTPUT_DIR = 'solutions'
-# ============================================ #
+from utils import *
+from config import *
 
 COMMENT_MAP = {
     '.py': '#',
@@ -21,49 +17,11 @@ COMMENT_MAP = {
     '.mysql': '#'
 }
 
-@dataclass
-class Submission:
-    id: int
-    question_id: int
-    lang: str
-    lang_name: str
-    time: str
-    timestamp: int
-    status: int
-    status_display: str
-    runtime: str
-    url: str
-    is_pending: str
-    title: str
-    memory: str
-    code: str
-    compare_result: str
-    title_slug: str
-    has_notes: bool
-    flag_type: int
-    frontend_id: int
-
-# read the submissions dir and extract the accepted submissions
-# yields lists of paths to the accepted submissions
-def get_accepted_submissions():
-    for filename in os.listdir(INPUT_DIR):
-        base = os.path.join(INPUT_DIR, filename, 'Accepted')
-        if not os.path.exists(base):
-            continue
-        yield [os.path.join(INPUT_DIR, filename, 'Accepted', submission)
-                for submission in os.listdir(base)]
-
-# todo: use leetcoed api to get info about percentile, difficulty, etc
-def get_info(submission_path : str) -> Submission:
-    with open(os.path.join(submission_path, 'info.txt'), encoding='utf-8') as f:
-        data = json.load(f)
-    return Submission(**data)
-
 # Take fastest python solution, or fastest solution if no python solution
 def heuristic(x : Submission):
     lang = x.lang_name
     runtime = int(x.runtime.split(" ")[0])
-    if lang == 'Python': # take python
+    if lang == 'Python' or lang == 'Python3': # take python
         return 100_000 - runtime
     else:
         return -runtime
@@ -111,7 +69,7 @@ with tempfile.TemporaryDirectory() as temp_dir:
     with zipfile.ZipFile('submissions.zip', 'r') as zip_ref:
         zip_ref.extractall(temp_dir)
     INPUT_DIR = temp_dir # kinda hacky but works -- maybe fix later
-    submissions = list(get_accepted_submissions())
+    submissions = list(get_accepted_submissions(INPUT_DIR))
     for submissions in tqdm.tqdm(submissions):
         try:
             chosen = select_submission(submissions)

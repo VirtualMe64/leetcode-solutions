@@ -1,17 +1,15 @@
 # Problem: https://leetcode.com/problems/best-time-to-buy-and-sell-stock
-# Runtime: 740 ms
+# Runtime: 87 ms
 
-class Solution(object):
-    def maxProfit(self, prices):
-        """
-        :type prices: List[int]
-        :rtype: int
-        """
-        bestProfit = 0
-        minPrice = 10001
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        minSoFar = None
+        bestSoFar = 0
+
         for p in prices:
-            minPrice = min(p, minPrice)
-            profit = p - minPrice
-            if profit > bestProfit:
-                bestProfit = profit
-        return bestProfit
+            if minSoFar is None or p < minSoFar:
+                minSoFar = p
+            delta = p - minSoFar
+            bestSoFar = max(delta, bestSoFar)
+        
+        return bestSoFar
