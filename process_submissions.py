@@ -17,6 +17,8 @@ COMMENT_MAP = {
     '.java': '//',
     '.c': '//',
     '.js': '//',
+    '.rb': '#',
+    '.mysql': '#'
 }
 
 @dataclass
@@ -53,7 +55,7 @@ def get_accepted_submissions():
 
 # todo: use leetcoed api to get info about percentile, difficulty, etc
 def get_info(submission_path : str) -> Submission:
-    with open(os.path.join(submission_path, 'info.txt')) as f:
+    with open(os.path.join(submission_path, 'info.txt'), encoding='utf-8') as f:
         data = json.load(f)
     return Submission(**data)
 
@@ -76,12 +78,12 @@ def correct_comment(submission : str, info : Submission, language : str):
         return
 
     comment = COMMENT_MAP[language]
-    with open(submission, 'r') as f:
+    with open(submission, 'r', encoding="utf-8") as f:
         lines = f.readlines()
         lines[0] = f"{comment} Problem: {lines[0][3:]}"
         lines.insert(1, f"{comment} Runtime: {info.runtime}\n")
         # if desired, add more info here
-    with open(submission, 'w') as f:
+    with open(submission, 'w', encoding="utf-8") as f:
         f.writelines(lines)
 
 def write_submission(submission_path : str):
@@ -111,5 +113,8 @@ with tempfile.TemporaryDirectory() as temp_dir:
     INPUT_DIR = temp_dir # kinda hacky but works -- maybe fix later
     submissions = list(get_accepted_submissions())
     for submissions in tqdm.tqdm(submissions):
-        chosen = select_submission(submissions)
-        write_submission(chosen)
+        try:
+            chosen = select_submission(submissions)
+            write_submission(chosen)
+        except Exception as e:
+            print(f"Error processing {submissions}: {e}")

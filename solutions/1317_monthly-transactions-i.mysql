@@ -1,0 +1,16 @@
+# Problem: https://leetcode.com/problems/monthly-transactions-i
+# Runtime: 633 ms
+
+# Write your MySQL query statement below
+SELECT
+    CONCAT(YEAR(trans_date), '-', LPAD(MONTH(trans_date), 2, '0')) as month,
+    country,
+    COUNT(*) as trans_count,
+    COUNT(case when state = 'approved' then 1 else null end) as approved_count,
+    SUM(amount) as trans_total_amount,
+    SUM(case when state = 'approved' then amount else 0 end) as approved_total_amount
+FROM
+    Transactions
+GROUP BY
+    EXTRACT(YEAR_MONTH FROM trans_date),
+    country

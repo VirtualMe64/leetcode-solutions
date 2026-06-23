@@ -1,23 +1,17 @@
 # Problem: https://leetcode.com/problems/maximum-number-of-operations-to-move-ones-to-the-end
-# Runtime: 80 ms
+# Runtime: 64 ms
 
 class Solution:
     def maxOperations(self, s: str) -> int:
-        # always do leftmost block, from right to left
-        # chains of 1s are good since we get to move them one at a time 
-        # can prob solve efficiently by scanning and keeping some type of counter
-        
         total = 0
-        blockSize = 0
-        inBlock = False
+        prev1s = 0
         
-        for c in s:
-            if c == '1':
-                blockSize += 1
-                inBlock = True
-            elif c == '0':
-                if inBlock:
-                    total += blockSize
-                inBlock = False
+        for i in range(len(s) - 1):
+            if s[i] != '1':
+                continue
+            
+            prev1s += 1
+            if s[i + 1] != '1':
+                total += prev1s
         
         return total

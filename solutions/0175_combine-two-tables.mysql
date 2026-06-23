@@ -1,0 +1,15 @@
+# Problem: https://leetcode.com/problems/combine-two-tables
+# Runtime: 380 ms
+
+# Write your MySQL query statement below
+SELECT
+    p.firstName,
+    p.lastName,
+    a.city,
+    a.state
+FROM
+    Person as p
+LEFT JOIN
+    Address as a
+ON
+    a.personId = p.personId

@@ -1,0 +1,15 @@
+# Problem: https://leetcode.com/problems/find-customer-referee
+# Runtime: 474 ms
+
+# Write your MySQL query statement below
+SELECT
+    c.name
+FROM
+    Customer as c
+LEFT JOIN
+    Customer as r
+ON
+    c.referee_id = r.id
+WHERE
+    r.id is Null
+    or r.id != 2

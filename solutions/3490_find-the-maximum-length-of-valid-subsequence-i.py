@@ -1,23 +1,27 @@
 # Problem: https://leetcode.com/problems/find-the-maximum-length-of-valid-subsequence-i
-# Runtime: 651 ms
+# Runtime: 32 ms
 
 class Solution:
     def maximumLength(self, nums: List[int]) -> int:
-        # longest subsequence with alternating parity or same parity
-        alternating = 1
-        curr = 1
-        last = nums[0] % 2
-        
-        oddCount = int(last)
-        evenCount = 1 - oddCount
-        
-        for num in nums[1:]:
-            if num % 2 != last:
-                curr += 1
-                alternating = max(curr, alternating)
-                last = num % 2
-            oddCount += int(num % 2)
-            evenCount += 1 - int(num % 2)
-    
+        # two options:
+        # 1. sequence of same parity (i.e 1 1 1 1 1)
+        # 2. sequence of alternating parity (i.e 1 0 1 0)
 
-        return max(oddCount, evenCount, alternating)
+        same_parity_0_cnt = 0
+        same_parity_1_cnt = 0
+        alternating_parity_cnt = 0
+        last_parity = None
+
+        for n in nums:
+            parity = n % 2
+
+            if parity == 0:
+                same_parity_0_cnt += 1
+            else:
+                same_parity_1_cnt += 1
+            
+            if parity != last_parity:
+                alternating_parity_cnt += 1
+                last_parity = parity
+
+        return max(same_parity_0_cnt, same_parity_1_cnt, alternating_parity_cnt)
